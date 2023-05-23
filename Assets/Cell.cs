@@ -55,15 +55,9 @@ public class Cell : MonoBehaviour {
 			_image.color = Color.white;
 	}
 
-	// Use this for initialization
 	void Awake() {
 		//label.text = "";
 		_image = GetComponent<Image>();
 		RefreshColor();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 }

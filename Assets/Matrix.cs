@@ -1,49 +1,69 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
-
+/*IMPORTANTEEEE _matrix[5 *h+5*/
 
 public class Matrix<T> : IEnumerable<T>
 {
-    //IMPLEMENTAR: ESTRUCTURA INTERNA- DONDE GUARDO LOS DATOS?
+    T[] _matrix;
 
     public Matrix(int width, int height)
     {
-        //IMPLEMENTAR: constructor
+        Width = width;
+        Height = height;
+
+        _matrix = new T[Width * Height];
     }
 
-	public Matrix(T[,] copyFrom)
+    public Matrix(T[,] copyFrom)
     {
-        //IMPLEMENTAR: crea una version de Matrix a partir de una matriz básica de C#
+        Width = copyFrom.GetLength(0);
+        Height = copyFrom.GetLength(1);
+        _matrix = copyFrom.Cast<T>().ToArray();
     }
 
-	public Matrix<T> Clone() {
+
+    public Matrix<T> Clone() {
         Matrix<T> aux = new Matrix<T>(Width, Height);
-        //IMPLEMENTAR
+        aux._matrix = _matrix;
         return aux;
     }
 
 	public void SetRangeTo(int x0, int y0, int x1, int y1, T item) {
-        //IMPLEMENTAR: iguala todo el rango pasado por parámetro a item
+        for (int i = x0; i < x1; i++)
+        {
+            for (int j = y0; j < y1; j++)
+            {
+                _matrix[i* Height + j] = item;
+            }
+        }
     }
 
     //Todos los parametros son INCLUYENTES
     public List<T> GetRange(int x0, int y0, int x1, int y1) {
-        List<T> l = new List<T>();
-        //IMPLEMENTAR
-        return l;
+        List<T> newList = new List<T>();
+
+        for (int i = x0; i < x1; i++)
+        {
+            for (int j = y0; j < y1; j++)
+            {
+                newList.Add(_matrix[i * Height + j]);
+            }
+        }
+
+        return newList;
 	}
 
-    //Para poder igualar valores en la matrix a algo
+
     public T this[int x, int y] {
 		get
         {
-            //IMPLEMENTAR
-            return default(T);
+            return _matrix[x*Height+y];
 		}
 		set {
-            //IMPLEMENTAR
+            _matrix[x * Height + y] = value;
 		}
 	}
 
@@ -55,8 +75,10 @@ public class Matrix<T> : IEnumerable<T>
 
     public IEnumerator<T> GetEnumerator()
     {
-        //IMPLEMENTAR
-        yield return default(T);
+        foreach (var item in _matrix)
+        {
+            yield return item;
+        }
     }
 
 	IEnumerator IEnumerable.GetEnumerator() {
