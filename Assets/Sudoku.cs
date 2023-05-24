@@ -41,6 +41,8 @@ public class Sudoku : MonoBehaviour {
         frequency = frequency * Mathf.Pow(r, 2);
         CreateEmptyBoard();
         ClearBoard();
+
+        CreateNew();
     }
 
     void ClearBoard() {
@@ -130,7 +132,7 @@ public class Sudoku : MonoBehaviour {
         List<Matrix<int>> l = new List<Matrix<int>>();
         watchdog = 100000;
         GenerateValidLine(_createdMatrix, 0, 0);
-        var result =false;
+        var result = RecuSolve(_createdMatrix, 0, 0, watchdog, l);
         _createdMatrix = l[0].Clone();
         LockRandomCells();
         ClearUnlocked(_createdMatrix);
@@ -140,7 +142,7 @@ public class Sudoku : MonoBehaviour {
         canSolve = result ? " VALID" : " INVALID";
         feedback.text = "Pasos: " + l.Count + "/" + l.Count + " - " + memory + " - " + canSolve;
     }
-	void GenerateValidLine(Matrix<int> mtx, int x, int y)
+    void GenerateValidLine(Matrix<int> mtx, int x, int y)
 	{
 		int[]aux = new int[9];
 		for (int i = 0; i < 9; i++) 
@@ -216,7 +218,12 @@ public class Sudoku : MonoBehaviour {
     }
     void CreateNew()
     {
-        _createdMatrix = new Matrix<int>(Tests.validBoards[1]);
+        _createdMatrix = new Matrix<int>(Tests.validBoards[Tests.validBoards.Length - 1]);
+
+        LockRandomCells();
+        ClearUnlocked(_createdMatrix);
+
+
         TranslateAllValues(_createdMatrix);
     }
 

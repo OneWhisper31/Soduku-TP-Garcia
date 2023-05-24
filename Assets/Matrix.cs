@@ -11,6 +11,7 @@ public class Matrix<T> : IEnumerable<T>
 
     public Matrix(int width, int height)
     {
+        Capacity = width * height;
         Width = width;
         Height = height;
 
@@ -21,13 +22,23 @@ public class Matrix<T> : IEnumerable<T>
     {
         Width = copyFrom.GetLength(0);
         Height = copyFrom.GetLength(1);
+        Capacity = Width * Height;
+
         _matrix = copyFrom.Cast<T>().ToArray();
     }
 
 
     public Matrix<T> Clone() {
         Matrix<T> aux = new Matrix<T>(Width, Height);
-        aux._matrix = _matrix;
+
+        for (int i = 0; i < Width; i++)
+        {
+            for (int j = 0; j < Height; j++)
+            {
+                aux[i, j] = _matrix[i + j * Height];
+            }
+        }
+
         return aux;
     }
 
@@ -36,7 +47,7 @@ public class Matrix<T> : IEnumerable<T>
         {
             for (int j = y0; j < y1; j++)
             {
-                _matrix[i* Height + j] = item;
+                _matrix[i + j * Height] = item;
             }
         }
     }
@@ -49,7 +60,7 @@ public class Matrix<T> : IEnumerable<T>
         {
             for (int j = y0; j < y1; j++)
             {
-                newList.Add(_matrix[i * Height + j]);
+                newList.Add(_matrix[i + j * Height]);
             }
         }
 
@@ -58,14 +69,24 @@ public class Matrix<T> : IEnumerable<T>
 
 
     public T this[int x, int y] {
-		get
+        get
         {
-            return _matrix[x*Height+y];
-		}
-		set {
-            _matrix[x * Height + y] = value;
-		}
-	}
+            //IMPLEMENTAR
+            if (x > Width || y > Height)
+                return default;
+            else
+                return _matrix[x+ y * Height];
+
+        }
+        set
+        {
+            //IMPLEMENTAR
+            if (x > Width || y > Height)
+                return;
+            else
+                _matrix[x + y * Height] = value;
+        }
+    }
 
     public int Width { get; private set; }
 
@@ -75,9 +96,20 @@ public class Matrix<T> : IEnumerable<T>
 
     public IEnumerator<T> GetEnumerator()
     {
-        foreach (var item in _matrix)
+        int x = 0;
+        int y = 0;
+
+        while (x < Width)
         {
-            yield return item;
+            y = 0;
+
+            while (y < Height)
+            {
+                yield return _matrix[x + y*Height];
+                y++;
+            }
+
+            x++;
         }
     }
 

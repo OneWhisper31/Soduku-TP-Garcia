@@ -15,6 +15,6 @@ public class DELETE : MonoBehaviour
                 xd[i,j] = Random.Range(1, 32);
             }
         }
-        var matrix =new Matrix<int>(xd);
+        var matrix =new Matrix<int>(Tests.validBoards[0]);
     }
 }
